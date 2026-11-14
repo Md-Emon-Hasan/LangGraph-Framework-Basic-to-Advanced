@@ -1,157 +1,225 @@
-# **LangGraph**
-![Image](https://github.com/user-attachments/assets/78e44cea-2324-4b06-8fa4-eda808ef1ede)
+# LangGraph: From Basics to Advanced Agentic AI
 
-## **1. What is LangGraph?**  
-**LangGraph** is a library built on top of **LangChain** designed to facilitate the creation of **stateful, multi-actor applications** with Large Language Models (LLMs). It enables the construction of **directed graphs** where nodes represent tasks or decision points, and edges define the flow of execution.  
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-workflows-1C3C3C?logo=langchain&logoColor=white)](https://www.langchain.com/langgraph)
+[![LangChain](https://img.shields.io/badge/LangChain-integrations-1C3C3C?logo=chainlink&logoColor=white)](https://www.langchain.com/)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-models-8E75B2?logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
+[![Chroma](https://img.shields.io/badge/Chroma-vector%20store-FF6F61)](https://www.trychroma.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-LangGraph is particularly useful for:  
-- **Orchestrating workflows** involving multiple LLM calls.  
-- **Handling cyclic and recursive processes** (e.g., agentic workflows).  
-- **Managing state** across different steps in an LLM pipeline.  
+<p align="center">
+  <img src="./banner.png" alt="LangGraph course banner" width="100%">
+</p>
 
-## **2. Why Use LangGraph?**  
-LangGraph addresses key challenges in LLM-based workflows:  
-- **State Management**: Maintains context across multiple steps.  
-- **Dynamic Control Flow**: Supports loops, conditionals, and parallel execution.  
-- **Modularity**: Encourages reusable components (nodes) in workflows.  
-- **Agentic Workflows**: Ideal for autonomous agents that require back-and-forth interactions.  
+A practical, notebook-based learning path for building stateful workflows and agentic applications with LangGraph. Start with graph structure and typed state, then progress through memory, tools, routing, reliability patterns, multi-agent collaboration, human review, custom tool schemas, and retrieval-augmented generation (RAG).
 
-## **3. When to Use LangGraph?**  
-LangGraph is best suited for:  
-- **Multi-step LLM workflows** (e.g., retrieval-augmented generation).  
-- **Autonomous agents** (e.g., AutoGPT-style applications).  
-- **Recursive or self-correcting processes** (e.g., refining responses iteratively).  
-- **Complex decision-making pipelines** where steps depend on previous outputs.  
+> The examples are educational notebooks. Some use APIs that have changed across LangChain and LangGraph releases; check the current documentation when adapting them to a new environment.
 
-## **4. Key Advantages**  
-✅ **Stateful Execution** – Maintains context across multiple steps.  
-✅ **Cyclic & Recursive Workflows** – Unlike DAGs, LangGraph supports loops.  
-✅ **Modular & Reusable** – Nodes can be reused across different workflows.  
-✅ **Scalable** – Works well for both simple and complex LLM pipelines.  
-✅ **Integration with LangChain** – Leverages LangChain’s existing tools and models.  
+## Contents
 
----
+- [What you will learn](#what-you-will-learn)
+- [Learning path](#learning-path)
+- [Repository layout](#repository-layout)
+- [Requirements and setup](#requirements-and-setup)
+- [Configuration and API keys](#configuration-and-api-keys)
+- [How to use the notebooks](#how-to-use-the-notebooks)
+- [Topics covered](#topics-covered)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+- [Connect with me](#connect-with-me)
 
-## **5. End-to-End Documentation**  
+## What you will learn
 
-### **5.1 Installation**  
+LangGraph lets you model an application as a graph: nodes perform work, edges choose what runs next, and shared state carries information through the workflow. Unlike a simple one-way chain, a graph can branch, loop, pause for input, and coordinate multiple agents.
+
+By working through this repository, you can learn to:
+
+- Define graph state with `TypedDict` and validate structured data with Pydantic.
+- Build and compile graphs with nodes, edges, and conditional routing.
+- Keep conversational context and pass information between workflow steps.
+- Connect language models and tools to graph workflows.
+- Add planner/executor flows, retries, fallbacks, and guardrails.
+- Split work across collaborating agents and subgraphs.
+- Incorporate a human review step into a workflow.
+- Build a basic document retrieval and question-answering pipeline.
+
+## Learning path
+
+Work through the numbered folders in order. Each folder contains a topic notebook; the RAG section also contains a sample PDF document used by its notebook.
+
+| Step | Topic | Main ideas |
+|---|---|---|
+| 1 | [Core structure, state, edges, nodes, and graphs](<./01-core-graph/>) | `StateGraph`, graph flow, nodes, edges, and entry/finish points |
+| 2 | [Typed state and input/output](<./02-typed-state/>) | `TypedDict`, Pydantic `BaseModel`, and state typing |
+| 3 | [Conversation memory](<./03-conversation-memory/>) | Conversation buffer and summary memory patterns |
+| 4 | [Tools and tool input schemas](<./04-tools/>) | Tool use, tool nodes, and external search tools |
+| 5 | [Planner and executor agents](<./05-planner-executor/>) | Task planning, delegation, and execution |
+| 6 | [Tool router agents](<./06-tool-routing/>) | Tool selection and conditional routing |
+| 7 | [Retries, fallbacks, and guardrails](<./07-reliability-patterns/>) | Error handling and recovery patterns |
+| 8 | [Multi-agent collaboration](<./08-multi-agent/>) | Subgraphs and cross-agent state |
+| 9 | [Human-in-the-loop workflows](<./09-human-in-the-loop/>) | Human input, review, and manual overrides |
+| 10 | [Global and agent memory](<./10-agent-memory/>) | Agent memory and shared context |
+| 11 | [Custom tool typing and schemas](<./11-custom-tool-schemas/>) | Pydantic validation and custom `BaseTool` schemas |
+| 12 | [RAG with documents and Chroma](<./12-rag-chroma/>) | PDF loading, chunking, embeddings, vector search, and retrieval |
+
+## Repository layout
+
+```text
+.
+|-- README.md
+|-- LICENSE
+|-- banner.png
+|-- 01-core-graph/
+|   `-- 01-core-graph.ipynb
+|-- 02-typed-state/
+|   `-- 02-typed-state.ipynb
+|-- 03-conversation-memory/
+|   |-- 03-conversation-buffer.ipynb
+|   `-- 03-conversation-summary.ipynb
+|-- 04-tools/
+|   `-- 04-tools.ipynb
+|-- 05-planner-executor/
+|   `-- 05-planner-executor.ipynb
+|-- 06-tool-routing/
+|   `-- 06-tool-routing.ipynb
+|-- 07-reliability-patterns/
+|   `-- 07-reliability-patterns.ipynb
+|-- 08-multi-agent/
+|   `-- 08-multi-agent.ipynb
+|-- 09-human-in-the-loop/
+|   `-- 09-human-in-the-loop.ipynb
+|-- 10-agent-memory/
+|   `-- 10-agent-memory.ipynb
+|-- 11-custom-tool-schemas/
+|   `-- 11-custom-tool-schemas.ipynb
+`-- 12-rag-chroma/
+    |-- 12-rag-chroma.ipynb
+    `-- data.pdf
+```
+
+Each numbered topic folder contains one or more Jupyter notebooks. The conversation memory section includes separate buffer and summary examples. Folder and notebook names use a consistent numbered format so the course sequence is easy to browse.
+
+## Requirements and setup
+
+- Python 3.10 or newer is recommended.
+- Jupyter Notebook or JupyterLab.
+- API credentials for the model or search services used by the notebook you want to run.
+- Internet access for installing packages, downloading embedding models, and calling hosted services.
+
+### 1. Clone the repository
+
 ```bash
-pip install langgraph
+git clone https://github.com/Md-Emon-Hasan/LangGraph-Framework-Basic-to-Advanced.git
+cd LangGraph-Framework-Basic-to-Advanced
 ```
 
-### **5.2 Core Concepts**  
-- **Nodes**: Units of work (can be a function or LangChain Runnable).  
-- **Edges**: Define transitions between nodes (conditional or unconditional).  
-- **State**: A shared data structure passed between nodes.  
+### 2. Create and activate a virtual environment
 
-### **5.3 Basic Example: Linear Workflow**  
-```python
-from langgraph.graph import Graph
+**Windows PowerShell**
 
-# Define nodes
-def node1(state):
-    return {"result": state["input"].upper()}
-
-def node2(state):
-    return {"final_result": f"Processed: {state['result']}"}
-
-# Build graph
-workflow = Graph()
-workflow.add_node("node1", node1)
-workflow.add_node("node2", node2)
-workflow.add_edge("node1", "node2")  # node1 -> node2
-workflow.set_entry_point("node1")
-workflow.set_finish_point("node2")
-
-# Compile and run
-app = workflow.compile()
-output = app.invoke({"input": "hello"})
-print(output)  # {'final_result': 'Processed: HELLO'}
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
 ```
 
-### **5.4 Advanced Example: Conditional Workflow**  
-```python
-from langgraph.graph import Graph
-from langgraph.checkpoint import MemorySaver
+**macOS / Linux**
 
-# Nodes
-def generate(state):
-    return {"draft": "AI-generated text..."}
-
-def human_review(state):
-    if "approve" in state["feedback"].lower():
-        return {"status": "approved"}
-    return {"status": "rejected"}
-
-# Graph with conditions
-workflow = Graph()
-workflow.add_node("generate", generate)
-workflow.add_node("human_review", human_review)
-workflow.add_edge("generate", "human_review")
-
-# Conditional edge
-def decide_next_step(state):
-    if state["status"] == "approved":
-        return "end"  # Finish
-    return "generate"  # Retry
-
-workflow.add_conditional_edges("human_review", decide_next_step)
-workflow.set_entry_point("generate")
-
-# Persist state (optional)
-memory = MemorySaver()
-app = workflow.compile(checkpointer=memory)
-
-# Execute
-output = app.invoke({"feedback": "approve"})
-print(output)  # {'status': 'approved'}
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-### **5.5 Using with LangChain**  
-```python
-from langgraph.graph import Graph
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
+### 3. Install the notebook and project libraries
 
-# Define LangChain components
-prompt = ChatPromptTemplate.from_template("Write a short poem about {topic}.")
-model = ChatOpenAI()
-chain = prompt | model
+The notebooks use LangGraph and selected LangChain integrations. Install the libraries needed for the lessons you plan to run:
 
-# LangGraph Node
-def generate_poem(state):
-    response = chain.invoke({"topic": state["topic"]})
-    return {"poem": response.content}
-
-# Build graph
-workflow = Graph()
-workflow.add_node("generate_poem", generate_poem)
-workflow.set_entry_point("generate_poem")
-workflow.set_finish_point("generate_poem")
-
-app = workflow.compile()
-output = app.invoke({"topic": "the ocean"})
-print(output["poem"])
+```bash
+python -m pip install --upgrade pip
+python -m pip install jupyter langgraph langchain langchain-core langchain-community langchain-google-genai python-dotenv pydantic chromadb pypdf sentence-transformers tavily-python wikipedia
 ```
 
----
+These are unpinned package names, not a tested lockfile. LangChain integrations evolve, and older notebook examples may need small code changes with recent releases. For reproducible projects, pin the versions you validate in your own environment.
 
-## **6. Best Practices**  
-- **Modularize Nodes**: Keep nodes small and reusable.  
-- **Use Checkpoints**: For long-running workflows, persist state.  
-- **Handle Errors**: Implement fallback mechanisms in conditional edges.  
-- **Optimize LLM Calls**: Cache responses where possible.  
+### 4. Start Jupyter
 
-## **7. Conclusion**  
-LangGraph is a powerful tool for **orchestrating stateful, dynamic LLM workflows**. It extends LangChain by supporting **cycles, conditionals, and multi-actor systems**, making it ideal for **autonomous agents, recursive pipelines, and complex decision-making applications**.  
+```bash
+jupyter notebook
+```
 
-For more details, check the [official LangGraph docs](https://langchain-ai.github.io/langgraph/).
+Open a numbered folder, then run its notebook from top to bottom. Begin with step 1 if this is your first time using LangGraph.
 
-## **8. Contact Me** 
-- **Email:** [iconicemon01@gmail.com](mailto:iconicemon01@gmail.com)
-- **WhatsApp:** [+8801834363533](https://wa.me/8801834363533)
+## Configuration and API keys
+
+Several lessons call hosted services, including Google Gemini and Tavily search. Add only the keys required by the notebook you are running. The notebooks use `python-dotenv` in some examples, so a local `.env` file is a convenient option:
+
+```dotenv
+GOOGLE_API_KEY=your_google_api_key
+TAVILY_API_KEY=your_tavily_api_key
+```
+
+Keep real credentials private. Do not commit `.env` files, paste keys into shared notebooks, or publish notebook outputs that contain secrets. If a notebook reads a different environment variable name, use the name shown in that notebook.
+
+Not every lesson needs an API key. Core graph and state examples can be studied without connecting to a hosted model. The RAG example also downloads or initializes an embedding model and uses the sample `data.pdf` in its folder.
+
+## How to use the notebooks
+
+1. Follow the numbered sequence, or open a topic directly if you already know the prerequisites.
+2. Read the Markdown cells before running code; they explain the exercise and expected flow.
+3. Run cells in order and review the state or output after each step.
+4. Set environment variables before running cells that call external services.
+5. Try changing the state shape, routing rules, tools, or prompts to explore the behavior.
+6. For a real application, add error handling, logging, tests, secret management, and dependency version pins appropriate to your deployment.
+
+## Topics covered
+
+### Graph fundamentals
+
+The opening lessons introduce graph state, nodes, edges, and execution flow. They show how state is passed between functions and how conditions can direct a graph down different paths.
+
+### State and structured data
+
+The state-typing lesson uses Python typing and Pydantic models to make workflow inputs and outputs easier to understand and validate.
+
+### Memory and conversations
+
+The memory lessons explore conversational history and summaries, along with ideas for sharing context across steps or agents. Memory APIs can differ by library version, so use the lesson as a learning example and consult current library documentation when updating it.
+
+### Tools and agent patterns
+
+Tool lessons demonstrate how an agent workflow can select or call tools such as web search and Wikipedia. Later lessons introduce planner/executor organization, conditional tool routing, and strategies for retrying or handling failures.
+
+### Collaboration and human review
+
+The multi-agent lesson introduces collaboration through subgraphs and shared state. The human-in-the-loop lesson demonstrates a workflow that can incorporate a person’s input or review before continuing.
+
+### Custom schemas and retrieval
+
+The custom tool lesson shows typed tool inputs and validation. The final lesson builds a basic RAG pipeline using a PDF loader, text splitting, embeddings, Chroma vector storage, and retrieval to answer questions about documents.
+
+## Troubleshooting
+
+- **Missing API key:** Set the environment variable expected by the notebook, then restart the notebook kernel and run cells again.
+- **Import error:** Activate the intended virtual environment and install the package that provides the missing import. Some older LangChain import paths have moved between releases.
+- **Notebook runs in the wrong Python environment:** Install and launch Jupyter from the same activated environment as the project libraries.
+- **Model or search request fails:** Check the key, account access, network connection, and any service-specific quota or model availability.
+- **RAG setup is slow on first run:** The embedding model may need to be downloaded and initialized before retrieval works.
+- **A notebook behaves differently with newer packages:** Check the package documentation and update the example to the installed API; the repository does not currently pin a single compatible dependency set.
+
+## Contributing
+
+Suggestions and improvements are welcome. Open an issue to report a problem or propose a lesson, or submit a pull request with a focused change. When updating a notebook, please keep examples runnable from top to bottom and avoid including API keys or other secrets.
+
+## License
+
+This project is distributed under the [MIT License](./LICENSE).
+
+## Connect with me
+
+- **Portfolio:** [emonlabs-ai.hitechparks.com](https://emonlabs-ai.hitechparks.com)
 - **GitHub:** [Md-Emon-Hasan](https://github.com/Md-Emon-Hasan)
-- **LinkedIn:** [Md Emon Hasan](https://www.linkedin.com/in/md-emon-hasan)
-- **Facebook:** [Md Emon Hasan](https://www.facebook.com/mdemon.hasan2001/)
-
----
+- **LinkedIn:** [Md Emon Hasan](https://www.linkedin.com/in/md-emon-hasan-695483237/)
+- **Hugging Face:** [emonHasan01](https://huggingface.co/emonHasan01)
+- **Email:** [emon.mlengineer@gmail.com](mailto:emon.mlengineer@gmail.com)
+- **WhatsApp:** [+880 1834-363-533](https://wa.me/8801834363533)
